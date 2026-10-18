@@ -1,0 +1,17 @@
+'use client';
+import {ArrowIcon} from './Icons';
+import Image from 'next/image';
+import {useBodyScrollLock} from '../lib/use-body-scroll-lock';
+import {useEffect,useRef,useState} from 'react';
+import Animated from './Animated';
+import {tripPhotos} from '../lib/customer-content';
+import type {TripPhoto} from '../lib/types';
+const fleetGallery:TripPhoto[]=[{src:'/assets/vehicle-crysta.webp',alt:'Toyota Innova Crysta',caption:'Room for the whole story.',category:'FAMILY MPV'},{src:'/assets/vehicle-ciaz.webp',alt:'Maruti Suzuki Ciaz',caption:'A little elegance. Every day.',category:'SEDAN'},{src:'/assets/vehicle-urbania.webp',alt:'Force Urbania',caption:'Bring your people.',category:'GROUP TRAVEL'},{src:'/assets/vehicle-etios.webp',alt:'Toyota Etios',caption:'Your everyday escape.',category:'SEDAN'}];
+export default function Gallery(){
+ const photos=tripPhotos.length?tripPhotos:fleetGallery;
+ const [selected,setSelected]=useState<number|null>(null),dialog=useRef<HTMLDialogElement>(null);
+ useBodyScrollLock(selected!==null);
+ useEffect(()=>{if(selected!==null&&!dialog.current?.open)dialog.current?.showModal()},[selected]);
+ const step=(delta:number)=>setSelected(i=>i===null?null:(i+delta+photos.length)%photos.length);
+ return <section className="section gallery-section" id="gallery"><div className="container"><div className="section-heading"><div><Animated className="eyebrow">05 / THROUGH THE LENS</Animated><Animated as="h2">A closer look.<br/><em>A little inspiration.</em></Animated></div><p>{tripPhotos.length?'Travel moments shared with permission.':'Explore the fleet in photographs. Customer trip photographs will appear here when our travellers share them.'}</p></div><div className="photo-masonry">{photos.map((photo,i)=><button key={photo.src} type="button" className={`gallery-tile tile-${i%4}`} onClick={()=>setSelected(i)} aria-label={`View fullscreen: ${photo.alt}`}><Image src={photo.src} alt={photo.alt} width={900} height={650} sizes="(max-width:650px) 90vw, 50vw"/><span className="gallery-tile-copy"><small>{photo.category}</small><strong>{photo.caption}</strong></span><span className="gallery-expand" aria-hidden="true"><ArrowIcon direction="up-right"/></span></button>)}</div>{!tripPhotos.length&&<div className="gallery-placeholder"><span aria-hidden="true">＋</span><div><h3>Your travel memories belong here.</h3><p>Customer trip gallery coming soon. Current images are representative fleet photographs.</p></div></div>}</div><dialog ref={dialog} className="gallery-dialog" data-lenis-prevent aria-label="Fullscreen photo viewer" onClose={()=>setSelected(null)} onKeyDown={e=>{if(e.key==='ArrowLeft'){e.preventDefault();step(-1)}if(e.key==='ArrowRight'){e.preventDefault();step(1)}}} onClick={e=>{if(e.target===e.currentTarget)dialog.current?.close()}}>{selected!==null&&<div className="lightbox-content"><button type="button" className="dialog-close" aria-label="Close fullscreen photo" onClick={()=>dialog.current?.close()}>×</button><Image key={photos[selected].src} src={photos[selected].src} alt={photos[selected].alt} width={1500} height={1000} sizes="90vw"/><div className="lightbox-footer"><button type="button" aria-label="Previous photo" onClick={()=>step(-1)}><ArrowIcon direction="left"/></button><p aria-live="polite">{photos[selected].alt}<span>{selected+1} / {photos.length}</span></p><button type="button" aria-label="Next photo" onClick={()=>step(1)}><ArrowIcon direction="right"/></button></div></div>}</dialog></section>;
+}

@@ -1,0 +1,1 @@
+export default function Loading(){return <div className="page-loading" role="status"><span className="loading-monogram">RS</span><p>Preparing your next journey…</p><span className="loading-line"/></div>}

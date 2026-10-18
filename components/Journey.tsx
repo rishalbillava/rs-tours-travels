@@ -1,0 +1,21 @@
+'use client';
+import {ArrowIcon} from './Icons';
+import {useEffect,useRef,useState} from 'react';
+import Link from 'next/link';
+import Animated from './Animated';
+import {useMotion} from './MotionProvider';
+import {attachJourneyScroll} from '../lib/journey-scroll';
+const milestones=[{title:'The city fades.',copy:'A familiar pickup. Your favourite people. Leave the everyday behind.',label:'01 / SET OFF'},{title:'Take the scenic way.',copy:'From winding hill roads to quiet coastal escapes, make room for the moments in between.',label:'02 / DISCOVER'},{title:'Bring home a story.',copy:'A comfortable ride and a trip shaped around you. Let’s plan the details together.',label:'03 / REMEMBER'}];
+export default function Journey(){
+ const track=useRef<HTMLDivElement>(null),map=useRef<HTMLDivElement>(null);
+ const root=useRef<HTMLElement>(null),path=useRef<SVGPathElement>(null),car=useRef<SVGGElement>(null),progressPath=useRef<SVGPathElement>(null);
+ const [active,setActive]=useState(0);const {paused,reduced,ready,toggleMotion}=useMotion();
+ useEffect(()=>{
+  if(paused||!root.current||!track.current||!map.current||!path.current||!car.current||!progressPath.current)return;
+  return attachJourneyScroll({root:root.current,track:track.current,map:map.current,path:path.current,car:car.current,progressPath:progressPath.current,onMilestone:setActive});
+ },[paused]);
+ return <section ref={root} className="journey-section" id="the-journey"><div className="container journey-layout">
+  <div className="journey-copy"><Animated className="eyebrow light">02 / THE ART OF GOING SOMEWHERE</Animated><Animated as="h2">The road is<br/>part of <em>the story.</em></Animated><p className="journey-intro">Some memories begin before you arrive.</p><ol className="journey-milestones">{milestones.map((item,i)=><li key={item.title} className={active===i?'active':''}><span className="milestone-dot"/><div><small>{item.label}</small><h3>{item.title}</h3><p>{item.copy}</p></div></li>)}</ol><Link className="text-link" href="/contact/#booking">Let’s plan your story <span><ArrowIcon direction="up-right"/></span></Link></div>
+  <div ref={track} className="journey-track" data-animated={!paused}><div ref={map} className="journey-map" aria-label="An illustrated road journey from departure to memories"><div className="map-glow"/><span className="map-caption">THE RS WAY OF TRAVELLING</span><svg viewBox="0 0 560 610" className="road-canvas" aria-hidden="true"><defs><linearGradient id="roadGold" x1="0" y1="1" x2="1" y2="0"><stop stopColor="#8f733f"/><stop offset="1" stopColor="#e6d5b4"/></linearGradient></defs><g className="map-mountains" fill="none" stroke="#8294a61a"><path d="M-50 260 130 85 290 240 435 65 650 270"/><path d="M-40 280 130 115 290 260 435 95 650 290"/><path d="M-40 300 130 145 290 280 435 125 650 310"/></g><path d="M150 550 C30 420 430 480 390 325 S60 325 145 180 S430 170 360 55" stroke="#cbd7e714" strokeWidth="57" fill="none"/><path ref={path} d="M150 550 C30 420 430 480 390 325 S60 325 145 180 S430 170 360 55" stroke="#536078" strokeWidth="2" strokeDasharray="5 9" fill="none"/><path ref={progressPath} d="M150 550 C30 420 430 480 390 325 S60 325 145 180 S430 170 360 55" stroke="url(#roadGold)" strokeWidth="3" fill="none"/><g fill="#ddc7a2" stroke="#122033" strokeWidth="6"><circle cx="150" cy="550" r="9"/><circle cx="390" cy="325" r="9"/><circle cx="360" cy="55" r="9"/></g><g ref={car} data-journey-car="" transform="translate(150 550)"><ellipse rx="21" ry="36" fill="#0003"/><rect x="-13" y="-26" width="26" height="52" rx="10" fill="#f4eee1"/><path d="M-9-12Q0-18 9-12L7 5H-7Z" fill="#18283a"/><path d="M-8 13H8L9 19H-9Z" fill="#526173"/><path d="M-13-18H-18M13-18H18" stroke="#e2cba6" strokeWidth="4"/></g><g className="map-city" stroke="#ddc7a2" opacity=".4" fill="none"><path d="M75 520v-30h18v30m6 0v-45h18v45m-48 0h55"/><path d="m398 65 10-35 10 35m-16-14h12m-6 14v14"/></g></svg><div className="map-location"><i/><span>{['A fresh beginning','A different perspective','A memory to keep'][active]}</span></div><div className="map-note">{reduced?<p>Motion follows your device’s Reduce Motion setting.</p>:paused&&ready?<><p>Website animations are paused.</p><button type="button" onClick={toggleMotion}>Enable animations</button></>:<p>Scroll to move the car · Illustrated route</p>}</div></div></div>
+ </div></section>;
+}
