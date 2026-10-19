@@ -30,3 +30,14 @@
 @media(max-width:420px){.rs-theory-hero .theory-copy h1{font-size:clamp(35px,9vw,45px)!important}.rs-theory-hero .theory-kicker{font-size:8px;letter-spacing:2px}.theory-actions{gap:13px}.theory-secondary{font-size:8px}.theory-car-meta strong{font-size:24px}.theory-car-meta span{font-size:7px}.theory-primary{padding-inline:16px}.theory-bottom{font-size:8px;letter-spacing:1px}}
 @media(prefers-reduced-motion:reduce){.theory-car-image,.theory-car-image img,.theory-car-stage{animation:none!important}.theory-scene-canvas{display:none}}
 .motion-paused .theory-car-image img,.motion-paused .theory-car-stage{animation:none!important}
+
+/* Homepage-only navigation treatment: retain the existing accessible menu. */
+body:has(.rs-theory-hero) .site-header-shell{position:relative;z-index:50}
+body:has(.rs-theory-hero) .site-header-shell .topbar{background:#08121c;color:#d7c5a7}
+body:has(.rs-theory-hero) .site-header-shell .header{background:#0a1420f7;border-color:#748d8b26;backdrop-filter:blur(22px);box-shadow:none}
+body:has(.rs-theory-hero) .site-header-shell .header .main-nav>a{color:#dce4df}
+body:has(.rs-theory-hero) .site-header-shell .header .main-nav>a.active{color:#dfc08a}
+body:has(.rs-theory-hero) .site-header-shell .header .brand img{mix-blend-mode:normal}
+body:has(.rs-theory-hero) .site-header-shell .header .header-enquire{background:#d3b98d;color:#0a1621;border-color:#d3b98d}
+body:has(.rs-theory-hero) .site-header-shell .header .menu-toggle span{background:#f4f2ea}
+@media(max-width:850px){body:has(.rs-theory-hero) .site-header-shell .header .main-nav.open{background:#0a1420;color:#f5f0e8}}
