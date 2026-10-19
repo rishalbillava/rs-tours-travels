@@ -3,6 +3,7 @@ import 'lenis/dist/lenis.css';
 import './styles.css';
 import './premium.css';
 import './airport.css';
+import './theory-experience.css';
 import type {ReactNode} from 'react';
 import ExperienceRuntime from '../components/ExperienceRuntime';
 import MotionProvider from '../components/MotionProvider';
